@@ -102,7 +102,18 @@ class __TwigTemplate_75319534ed7a264a4e99ef39b2073e3e extends Template
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
+<div class=\"example-wrapper\">
+    <h1>Hello ";
+        // line 12
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["controller_name"]) || array_key_exists("controller_name", $context) ? $context["controller_name"] : (function () { throw new RuntimeError('Variable "controller_name" does not exist.', 12, $this->source); })()), "html", null, true);
+        yield "! ✅</h1>
 
+    This friendly message is coming from:
+    <ul>
+        <li>Your controller at <code>/var/www/html/wr506d/wr506d/src/Controller/ProductController.php</code></li>
+        <li>Your template at <code>/var/www/html/wr506d/wr506d/templates/product/index.html.twig</code></li>
+    </ul>
+</div>
 ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -134,7 +145,7 @@ class __TwigTemplate_75319534ed7a264a4e99ef39b2073e3e extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
+        return array (  108 => 12,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -149,7 +160,15 @@ class __TwigTemplate_75319534ed7a264a4e99ef39b2073e3e extends Template
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
+<div class=\"example-wrapper\">
+    <h1>Hello {{ controller_name }}! ✅</h1>
 
+    This friendly message is coming from:
+    <ul>
+        <li>Your controller at <code>/var/www/html/wr506d/wr506d/src/Controller/ProductController.php</code></li>
+        <li>Your template at <code>/var/www/html/wr506d/wr506d/templates/product/index.html.twig</code></li>
+    </ul>
+</div>
 {% endblock %}
 ", "product/index.html.twig", "/var/www/html/wr506d/wr506d/templates/product/index.html.twig");
     }
