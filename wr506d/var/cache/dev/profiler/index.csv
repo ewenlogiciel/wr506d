@@ -21,3 +21,7 @@ d158d2,172.21.0.1,GET,http://localhost:8319/product/123,1757666659,3c5b2a,500,re
 779c6b,172.21.0.1,GET,http://localhost:8319/product/123,1757666805,,200,request
 c37b51,172.21.0.1,GET,http://localhost:8319/products,1757666813,,200,request
 f832d0,172.21.0.1,GET,http://localhost:8319/products,1757666960,,200,request
+d68df4,172.21.0.1,GET,http://localhost:8319/,1757923243,,404,request
+2fcc0d,172.21.0.1,GET,http://localhost:8319/products,1757923249,,200,request
+dccd32,172.21.0.1,GET,http://localhost:8319/product/123,1757923253,,200,request
+78e8a4,172.21.0.1,GET,http://localhost:8319/product/123,1757924338,,200,request
