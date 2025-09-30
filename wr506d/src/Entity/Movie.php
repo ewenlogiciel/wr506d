@@ -2,17 +2,16 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\MovieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\ApiResource;
-
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
 #[ApiResource]
-
+#[ORM\HasLifecycleCallbacks]
 class Movie
 {
     #[ORM\Id]
@@ -29,13 +28,13 @@ class Movie
     #[ORM\Column(nullable: true)]
     private ?int $duration = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTime $releaseDate = null;
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTime $releaseData = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $createdAt = null;
 
     /**
@@ -97,14 +96,14 @@ class Movie
         return $this;
     }
 
-    public function getReleaseDate(): ?\DateTime
+    public function getReleaseData(): ?\DateTime
     {
-        return $this->releaseDate;
+        return $this->releaseData;
     }
 
-    public function setReleaseDate(?\DateTime $releaseDate): static
+    public function setReleaseData(?\DateTime $releaseData): static
     {
-        $this->releaseDate = $releaseDate;
+        $this->releaseData = $releaseData;
 
         return $this;
     }
@@ -131,6 +130,14 @@ class Movie
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function initializeCreatedAt(): void
+    {
+        if ($this->createdAt === null) {
+            $this->createdAt = new \DateTimeImmutable();
+        }
     }
 
     /**

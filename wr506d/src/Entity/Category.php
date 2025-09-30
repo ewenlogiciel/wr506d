@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\ApiResource;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ApiResource]
+#[ORM\HasLifecycleCallbacks]
 class Category
 {
     #[ORM\Id]
@@ -26,7 +27,7 @@ class Category
     #[ORM\ManyToMany(targetEntity: Movie::class, inversedBy: 'categories')]
     private Collection $movies;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $createdAt = null;
 
     public function __construct()
@@ -85,5 +86,13 @@ class Category
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function initializeCreatedAt(): void
+    {
+        if ($this->createdAt === null) {
+            $this->createdAt = new \DateTimeImmutable();
+        }
     }
 }
