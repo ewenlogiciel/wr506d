@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
 #[ApiResource]
@@ -17,15 +19,25 @@ class Movie
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Type('integer')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Type('string')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Type('string')]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Length(
+        min: 30,
+        max: 400,
+        minMessage: 'The movie must at least last {{ limit }} minutes',
+        maxMessage: 'The movie musn\'t exceed{{ limit }} minutes',
+    )]
     private ?int $duration = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
