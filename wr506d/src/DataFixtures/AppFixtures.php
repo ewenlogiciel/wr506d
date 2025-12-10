@@ -20,14 +20,16 @@ class AppFixtures extends Fixture
         // 1️⃣ ACTORS
         // =====================
         $actorsArray = [];
+        /** @var array<int, string> $actors */
         $actors = $faker->actors($gender = null, $count = 190, $duplicates = false);
 
         foreach ($actors as $item) {
             $actor = new Actor();
             $names = explode(" ", $item);
 
-            $actor->setFirstName($names[0] ?? '');
-            $actor->setLastName($names[1] ?? '');
+            // Utiliser array_key_exists ou isset au lieu de ??
+            $actor->setFirstName($names[0]);
+            $actor->setLastName($names[1] ?? $names[0]); // Fallback au prénom si pas de nom
             $actor->setBio($faker->paragraph(6, true));
 
             $dob = $faker->dateTimeThisCentury();
@@ -45,14 +47,15 @@ class AppFixtures extends Fixture
         // 2️⃣ DIRECTORS
         // =====================
         $directorsArray = [];
+        /** @var array<int, string> $directors */
         $directors = $faker->actors($gender = null, $count = 40, $duplicates = false);
 
         foreach ($directors as $item) {
             $director = new Director();
             $names = explode(" ", $item);
 
-            $director->setFirstname($names[0] ?? '');
-            $director->setLastname($names[1] ?? '');
+            $director->setFirstname($names[0]);
+            $director->setLastname($names[1] ?? $names[0]);
 
             $dob = $faker->dateTimeBetween('-90 years', '-30 years');
             $director->setDob($dob);
@@ -73,11 +76,14 @@ class AppFixtures extends Fixture
         $fakerMovie->addProvider(new \Xylis\FakerCinema\Provider\Movie($fakerMovie));
 
         $categoriesArray = [];
+        /** @var array<int, string> $movies */
         $movies = $fakerMovie->movies(199);
 
         foreach ($movies as $item) {
             $movie = new Movie();
             $movie->setName($item);
+
+            // @phpstan-ignore-next-line - Property dynamically added by FakerCinema provider
             $movie->setDescription($fakerMovie->overview);
 
             // Durée entre 1h et 4h30
@@ -97,6 +103,7 @@ class AppFixtures extends Fixture
             $movie->setNbEntries($faker->numberBetween(100_000, 20_000_000));
 
             // Catégorie (créée si nouvelle)
+            // @phpstan-ignore-next-line - Property dynamically added by FakerCinema provider
             $categoryName = $fakerMovie->movieGenre;
             if (!array_key_exists($categoryName, $categoriesArray)) {
                 $category = new Category();
@@ -114,7 +121,7 @@ class AppFixtures extends Fixture
                 $movie->addActor($actorObject);
             }
 
-            // 🎬 Attribution d’un réalisateur aléatoire
+            // 🎬 Attribution d'un réalisateur aléatoire
             $director = $faker->randomElement($directorsArray);
             $movie->setDirector($director);
 

@@ -28,7 +28,5 @@ final class ProductController extends AbstractController
             'title' => "Affichage du produit $id",
             'id' => $id,
         ]);
-
-
     }
 }

@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '9db521082de3976797b05646545a57a85f45ae8f',
+        'reference' => '06b8dc963042cc9093ed14d51926a1d71bb93e8a',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '9db521082de3976797b05646545a57a85f45ae8f',
+            'reference' => '06b8dc963042cc9093ed14d51926a1d71bb93e8a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -181,6 +181,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'phpstan/phpstan' => array(
+            'pretty_version' => '2.1.31',
+            'version' => '2.1.31.0',
+            'reference' => 'ead89849d879fe203ce9292c6ef5e7e76f867b96',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpstan/phpstan',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
         'psr/cache' => array(
             'pretty_version' => '3.0.0',
             'version' => '3.0.0.0',
@@ -261,6 +270,15 @@
             'provided' => array(
                 0 => '1.0|2.0|3.0',
             ),
+        ),
+        'squizlabs/php_codesniffer' => array(
+            'pretty_version' => '4.0.0',
+            'version' => '4.0.0.0',
+            'reference' => '06113cfdaf117fc2165f9cd040bd0f17fcd5242d',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../squizlabs/php_codesniffer',
+            'aliases' => array(),
+            'dev_requirement' => true,
         ),
         'symfony/cache' => array(
             'pretty_version' => 'v7.3.2',

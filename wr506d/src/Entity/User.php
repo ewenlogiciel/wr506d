@@ -33,6 +33,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    /**
+     * @var int API rate limit per interval (nombre de requêtes autorisées)
+     */
+    #[ORM\Column(type: 'integer', options: ['default' => 5000])]
+    private int $apiRateLimit = 5000;
+
+    /**
+     * @var string API rate limit interval (ex: '1 hour', '1 day')
+     */
+    #[ORM\Column(length: 20, options: ['default' => '1 hour'])]
+    private string $apiRateLimitInterval = '1 hour';
+
     public function getId(): ?int
     {
         return $this->id;
@@ -97,13 +109,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getApiRateLimit(): int
+    {
+        return $this->apiRateLimit;
+    }
+
+    public function setApiRateLimit(int $apiRateLimit): static
+    {
+        $this->apiRateLimit = $apiRateLimit;
+
+        return $this;
+    }
+
+    public function getApiRateLimitInterval(): string
+    {
+        return $this->apiRateLimitInterval;
+    }
+
+    public function setApiRateLimitInterval(string $interval): static
+    {
+        $this->apiRateLimitInterval = $interval;
+
+        return $this;
+    }
+
     /**
      * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
      */
     public function __serialize(): array
     {
         $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+        $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
 
         return $data;
     }

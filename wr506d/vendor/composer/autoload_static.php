@@ -20,11 +20,12 @@ class ComposerStaticInitbe22bb40d0217f38971b87e3842305ad
         'c7baa00073ee9c61edf148c51917cfb4' => __DIR__ . '/..' . '/twig/twig/src/Resources/escaper.php',
         'f844ccf1d25df8663951193c3fc307c8' => __DIR__ . '/..' . '/twig/twig/src/Resources/string_loader.php',
         '09f6b20656683369174dd6fa83b7e5fb' => __DIR__ . '/..' . '/symfony/polyfill-uuid/bootstrap.php',
-        '2203a247e6fda86070a5e4e07aed533a' => __DIR__ . '/..' . '/symfony/clock/Resources/now.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
+        '2203a247e6fda86070a5e4e07aed533a' => __DIR__ . '/..' . '/symfony/clock/Resources/now.php',
         'ac295ee8be42f266c7e20d14b8cf500a' => __DIR__ . '/..' . '/api-platform/jsonld/HydraContext.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '6a47392539ca2329373e0d33e1dba053' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/bootstrap.php',
+        '9b38cf48e83f5d8f60375221cd213eee' => __DIR__ . '/..' . '/phpstan/phpstan/bootstrap.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
     );
@@ -41,6 +42,10 @@ class ComposerStaticInitbe22bb40d0217f38971b87e3842305ad
         'W' => 
         array (
             'Webmozart\\Assert\\' => 17,
+        ),
+        'V' => 
+        array (
+            'Vich\\UploaderBundle\\' => 20,
         ),
         'T' => 
         array (
@@ -83,6 +88,7 @@ class ComposerStaticInitbe22bb40d0217f38971b87e3842305ad
             'Symfony\\Component\\Security\\Core\\' => 32,
             'Symfony\\Component\\Runtime\\' => 26,
             'Symfony\\Component\\Routing\\' => 26,
+            'Symfony\\Component\\RateLimiter\\' => 30,
             'Symfony\\Component\\PropertyInfo\\' => 31,
             'Symfony\\Component\\PropertyAccess\\' => 33,
             'Symfony\\Component\\Process\\' => 26,
@@ -135,6 +141,7 @@ class ComposerStaticInitbe22bb40d0217f38971b87e3842305ad
             'Psr\\Cache\\' => 10,
             'PhpParser\\' => 10,
             'PHPStan\\PhpDocParser\\' => 21,
+            'PDepend\\' => 8,
         ),
         'N' => 
         array (
@@ -144,6 +151,7 @@ class ComposerStaticInitbe22bb40d0217f38971b87e3842305ad
         'M' => 
         array (
             'Monolog\\' => 8,
+            'Metadata\\' => 9,
             'Masterminds\\' => 12,
         ),
         'L' => 
@@ -185,7 +193,9 @@ class ComposerStaticInitbe22bb40d0217f38971b87e3842305ad
         ),
         'C' => 
         array (
+            'Composer\\XdebugHandler\\' => 23,
             'Composer\\Semver\\' => 16,
+            'Composer\\Pcre\\' => 14,
             'Cocur\\Slugify\\' => 14,
         ),
         'A' => 
@@ -223,6 +233,10 @@ class ComposerStaticInitbe22bb40d0217f38971b87e3842305ad
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
+        ),
+        'Vich\\UploaderBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/vich/uploader-bundle/src',
         ),
         'Twig\\Extra\\TwigExtraBundle\\' => 
         array (
@@ -367,6 +381,10 @@ class ComposerStaticInitbe22bb40d0217f38971b87e3842305ad
         'Symfony\\Component\\Routing\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/routing',
+        ),
+        'Symfony\\Component\\RateLimiter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/rate-limiter',
         ),
         'Symfony\\Component\\PropertyInfo\\' => 
         array (
@@ -564,6 +582,10 @@ class ComposerStaticInitbe22bb40d0217f38971b87e3842305ad
         array (
             0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
         ),
+        'PDepend\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pdepend/pdepend/src/main/php/PDepend',
+        ),
         'Nelmio\\CorsBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/nelmio/cors-bundle',
@@ -575,6 +597,10 @@ class ComposerStaticInitbe22bb40d0217f38971b87e3842305ad
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'Metadata\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jms/metadata/src',
         ),
         'Masterminds\\' => 
         array (
@@ -669,9 +695,17 @@ class ComposerStaticInitbe22bb40d0217f38971b87e3842305ad
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
+        'Composer\\XdebugHandler\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/xdebug-handler/src',
+        ),
         'Composer\\Semver\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/semver/src',
+        ),
+        'Composer\\Pcre\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/pcre/src',
         ),
         'Cocur\\Slugify\\' => 
         array (
@@ -740,6 +774,16 @@ class ComposerStaticInitbe22bb40d0217f38971b87e3842305ad
         'ApiPlatform\\Doctrine\\Common\\' => 
         array (
             0 => __DIR__ . '/..' . '/api-platform/doctrine-common',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'P' => 
+        array (
+            'PHPMD\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/phpmd/phpmd/src/main/php',
+            ),
         ),
     );
 
@@ -2060,6 +2104,7 @@ class ComposerStaticInitbe22bb40d0217f38971b87e3842305ad
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitbe22bb40d0217f38971b87e3842305ad::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitbe22bb40d0217f38971b87e3842305ad::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitbe22bb40d0217f38971b87e3842305ad::$prefixesPsr0;
             $loader->classMap = ComposerStaticInitbe22bb40d0217f38971b87e3842305ad::$classMap;
 
         }, null, ClassLoader::class);
