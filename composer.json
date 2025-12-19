@@ -24,7 +24,7 @@
         "symfony/twig-bundle": "7.1.*",
         "symfony/validator": "7.1.*",
         "symfony/yaml": "7.1.*",
-        "vich/uploader-bundle": "*",
+        "vich/uploader-bundle": "^2.9",
         "webonyx/graphql-php": "^15.28"
     },
     "require-dev": {
