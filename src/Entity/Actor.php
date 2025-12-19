@@ -18,7 +18,6 @@ class Actor
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Assert\NotBlank]
     #[Assert\Type('integer')]
     private ?int $id = null;
 
@@ -27,7 +26,6 @@ class Actor
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotBlank]
     #[Assert\Type('string')]
     private ?string $firstname = null;
 

@@ -6,7 +6,3 @@ parameters:
         - public/
         - src/
         - tests/
-
-    ignoreErrors:
-        - '#Call to an undefined method Faker\\Generator::(actors|movies)\(\)#'
-        - '#Access to an undefined property Faker\\Generator::\$(overview|movieGenre)#'
