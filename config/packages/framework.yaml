@@ -8,6 +8,7 @@ framework:
 
     #esi: true
     #fragments: true
+    trusted_hosts: ['localhost', '127.0.0.1']
 
 when@test:
     framework:

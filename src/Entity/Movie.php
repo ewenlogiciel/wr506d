@@ -9,16 +9,23 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    paginationItemsPerPage: 300
+)]
+#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial'])]
+#[ApiFilter(SearchFilter::class, properties: ['director' => 'exact'])]
+#[ApiFilter(OrderFilter::class, properties: ['releaseData'], arguments: ['orderParameterName' => 'order'])]
 #[ORM\HasLifecycleCallbacks]
 class Movie
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Assert\NotBlank]
     #[Assert\Type('integer')]
     private ?int $id = null;
 
@@ -31,12 +38,6 @@ class Movie
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
-    #[Assert\Length(
-        min: 30,
-        max: 400,
-        minMessage: 'The movie must at least last {{ limit }} minutes',
-        maxMessage: 'The movie musn\'t exceed{{ limit }} minutes',
-    )]
     private ?int $duration = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
@@ -72,10 +73,17 @@ class Movie
     #[ORM\Column(nullable: true)]
     private ?float $budget = null;
 
+    /**
+     * @var Collection<int, Comment>
+     */
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'movie', orphanRemoval: true)]
+    private Collection $comments;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->actors = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -91,7 +99,6 @@ class Movie
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -103,7 +110,6 @@ class Movie
     public function setDescription(?string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -115,7 +121,6 @@ class Movie
     public function setDuration(?int $duration): static
     {
         $this->duration = $duration;
-
         return $this;
     }
 
@@ -127,7 +132,6 @@ class Movie
     public function setReleaseData(?\DateTime $releaseData): static
     {
         $this->releaseData = $releaseData;
-
         return $this;
     }
 
@@ -139,7 +143,6 @@ class Movie
     public function setImage(?string $image): static
     {
         $this->image = $image;
-
         return $this;
     }
 
@@ -151,7 +154,6 @@ class Movie
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
@@ -163,9 +165,6 @@ class Movie
         }
     }
 
-    /**
-     * @return Collection<int, Category>
-     */
     public function getCategories(): Collection
     {
         return $this->categories;
@@ -177,7 +176,6 @@ class Movie
             $this->categories->add($category);
             $category->addMovie($this);
         }
-
         return $this;
     }
 
@@ -186,13 +184,9 @@ class Movie
         if ($this->categories->removeElement($category)) {
             $category->removeMovie($this);
         }
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Actor>
-     */
     public function getActors(): Collection
     {
         return $this->actors;
@@ -204,7 +198,6 @@ class Movie
             $this->actors->add($actor);
             $actor->addMovie($this);
         }
-
         return $this;
     }
 
@@ -213,7 +206,6 @@ class Movie
         if ($this->actors->removeElement($actor)) {
             $actor->removeMovie($this);
         }
-
         return $this;
     }
 
@@ -225,7 +217,6 @@ class Movie
     public function setNbEntries(?int $nbEntries): static
     {
         $this->nbEntries = $nbEntries;
-
         return $this;
     }
 
@@ -237,7 +228,6 @@ class Movie
     public function setDirector(?Director $director): static
     {
         $this->director = $director;
-
         return $this;
     }
 
@@ -249,7 +239,6 @@ class Movie
     public function setUrl(?string $url): static
     {
         $this->url = $url;
-
         return $this;
     }
 
@@ -261,7 +250,30 @@ class Movie
     public function setBudget(?float $budget): static
     {
         $this->budget = $budget;
+        return $this;
+    }
 
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setMovie($this);
+        }
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            if ($comment->getMovie() === $this) {
+                $comment->setMovie(null);
+            }
+        }
         return $this;
     }
 }
