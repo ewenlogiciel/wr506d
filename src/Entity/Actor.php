@@ -11,7 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ActorRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    paginationItemsPerPage: 200
+)]
 #[ORM\HasLifecycleCallbacks]
 class Actor
 {
@@ -26,7 +28,6 @@ class Actor
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Type('string')]
     private ?string $firstname = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
