@@ -34,7 +34,8 @@
         "squizlabs/php_codesniffer": "^4.0",
         "symfony/debug-bundle": "7.1.*",
         "symfony/maker-bundle": "*",
-        "symfony/web-profiler-bundle": "7.1.*"
+        "symfony/web-profiler-bundle": "7.1.*",
+        "xylis/faker-cinema-providers": "^2.0"
     },
     "config": {
         "allow-plugins": {
