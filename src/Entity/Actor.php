@@ -2,18 +2,53 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\ActorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: ActorRepository::class)]
 #[ApiResource(
-    paginationItemsPerPage: 200
+    operations: [
+        new GetCollection(
+            normalizationContext: ['groups' => ['actor:list']]
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['actor:read']]
+        ),
+        new Post(
+            normalizationContext: ['groups' => ['actor:read']],
+            denormalizationContext: ['groups' => ['actor:write']]
+        ),
+        new Put(
+            normalizationContext: ['groups' => ['actor:read']],
+            denormalizationContext: ['groups' => ['actor:write']]
+        ),
+        new Patch(
+            normalizationContext: ['groups' => ['actor:read']],
+            denormalizationContext: ['groups' => ['actor:write']]
+        ),
+        new Delete()
+    ]
 )]
+#[ApiFilter(SearchFilter::class, properties: ['lastname' => 'start', 'firstname' => 'start'])]
+#[ApiFilter(DateFilter::class, properties: ['dob'])]
+#[ApiFilter(ExistsFilter::class, properties: ['dod'])]
 #[ORM\HasLifecycleCallbacks]
 class Actor
 {
@@ -21,16 +56,20 @@ class Actor
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Assert\Type('integer')]
+    #[Groups(['actor:list', 'actor:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
+    #[Groups(['actor:read', 'actor:write'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['actor:read', 'actor:write'])]
     private ?string $firstname = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(['actor:read', 'actor:write'])]
     private ?\DateTime $dob = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
@@ -46,6 +85,7 @@ class Actor
      * @var Collection<int, Movie>
      */
     #[ORM\ManyToMany(targetEntity: Movie::class, inversedBy: 'actors')]
+    #[Groups(['actor:read'])]
     private Collection $movies;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
@@ -54,6 +94,31 @@ class Actor
     public function __construct()
     {
         $this->movies = new ArrayCollection();
+    }
+
+    /**
+     * Nom complet (virtuel)
+     */
+    #[Groups(['actor:list', 'actor:read'])]
+    public function getFullName(): string
+    {
+        return trim($this->lastname . ' ' . $this->firstname);
+    }
+
+
+    /**
+     * Âge calculé (virtuel)
+     */
+    #[Groups(['actor:list'])]
+    public function getAge(): ?int
+    {
+        if ($this->dob === null) {
+            return null;
+        }
+        // Si décédé, calcule l'âge au moment du décès
+        $reference = $this->dod ?? new \DateTime();
+
+        return $this->dob->diff($reference)->y;
     }
 
     public function getId(): ?int
