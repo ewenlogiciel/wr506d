@@ -20,7 +20,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use DateTime;
+use DateTimeImmutable;
 
 #[ORM\Entity(repositoryClass: ActorRepository::class)]
 #[ApiResource(
@@ -115,8 +116,7 @@ class Actor
         if ($this->dob === null) {
             return null;
         }
-        // Si décédé, calcule l'âge au moment du décès
-        $reference = $this->dod ?? new \DateTime();
+        $reference = $this->dod ?? new DateTime();
 
         return $this->dob->diff($reference)->y;
     }
@@ -238,7 +238,7 @@ class Actor
     public function initializeCreatedAt(): void
     {
         if ($this->createdAt === null) {
-            $this->createdAt = new \DateTimeImmutable();
+            $this->createdAt = new DateTimeImmutable();
         }
     }
 }

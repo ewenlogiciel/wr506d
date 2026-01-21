@@ -1,4 +1,5 @@
 <?php
+
 // src/State/MediaObjectProcessor.php
 
 namespace App\State;

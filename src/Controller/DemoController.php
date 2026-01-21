@@ -5,6 +5,8 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use DateTime;
+
 
 final class DemoController extends AbstractController
 {
@@ -13,7 +15,7 @@ final class DemoController extends AbstractController
     {
         return $this->render('demo/index.html.twig', [
             'controller_name' => 'DemoController',
-            'datetime' => new \DateTime(),
+            'datetime' => new DateTime(),
         ]);
     }
 }

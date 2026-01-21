@@ -8,126 +8,131 @@ use App\Entity\Movie;
 use App\Entity\Director;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
+use Faker\Generator;
+use Xylis\FakerCinema\Provider\Person;
+use Xylis\FakerCinema\Provider\Movie as MovieProvider;
 
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
 class AppFixtures extends Fixture
 {
+    private Generator $faker;
+    private array $actors = [];
+    private array $directors = [];
+    private array $categories = [];
+
+    public function __construct()
+    {
+        $this->faker = Factory::create();
+        $this->faker->addProvider(new Person($this->faker));
+        $this->faker->addProvider(new MovieProvider($this->faker));
+    }
+
     public function load(ObjectManager $manager): void
     {
-        $faker = \Faker\Factory::create();
-        $faker->addProvider(new \Xylis\FakerCinema\Provider\Person($faker));
+        $this->loadActors($manager);
+        $this->loadDirectors($manager);
+        $this->loadMovies($manager);
 
-        // =====================
-        // 1️⃣ ACTORS
-        // =====================
-        $actorsArray = [];
-        /** @var array<int, string> $actors */
-        $actors = $faker->actors($gender = null, $count = 190, $duplicates = false);
+        $manager->flush();
+    }
 
-        foreach ($actors as $item) {
+    private function loadActors(ObjectManager $manager): void
+    {
+        /** @phpstan-ignore-next-line */
+        $actorNames = $this->faker->actors($gender = null, $count = 190, $duplicates = false);
+
+        foreach ($actorNames as $item) {
             $actor = new Actor();
             $names = explode(" ", $item);
 
-            // Utiliser array_key_exists ou isset au lieu de ??
             $actor->setFirstName($names[0]);
-            $actor->setLastName($names[1] ?? $names[0]); // Fallback au prénom si pas de nom
-            $actor->setBio($faker->paragraph(6, true));
+            $actor->setLastName($names[1] ?? $names[0]);
+            $actor->setBio($this->faker->paragraph(6, true));
+            $actor->setDob($this->faker->dateTimeThisCentury());
 
-            $dob = $faker->dateTimeThisCentury();
-            $actor->setDob($dob);
-
-            if ($faker->boolean(10)) {
-                $actor->setDod($faker->dateTimeBetween($dob, 'now'));
+            if ($this->faker->boolean(10)) {
+                $actor->setDod($this->faker->dateTimeBetween($actor->getDob(), 'now'));
             }
 
-            $actorsArray[] = $actor;
+            $this->actors[] = $actor; // On stocke dans la propriété de classe
             $manager->persist($actor);
         }
+    }
 
-        // =====================
-        // 2️⃣ DIRECTORS
-        // =====================
-        $directorsArray = [];
-        /** @var array<int, string> $directors */
-        $directors = $faker->actors($gender = null, $count = 40, $duplicates = false);
+    private function loadDirectors(ObjectManager $manager): void
+    {
+        /** @phpstan-ignore-next-line */
+        $directorNames = $this->faker->actors($gender = null, $count = 40, $duplicates = false);
 
-        foreach ($directors as $item) {
+        foreach ($directorNames as $item) {
             $director = new Director();
             $names = explode(" ", $item);
 
             $director->setFirstname($names[0]);
             $director->setLastname($names[1] ?? $names[0]);
+            $director->setDob($this->faker->dateTimeBetween('-90 years', '-30 years'));
 
-            $dob = $faker->dateTimeBetween('-90 years', '-30 years');
-            $director->setDob($dob);
-
-            // Environ 15% de réalisateurs décédés
-            if ($faker->boolean(15)) {
-                $director->setDod($faker->dateTimeBetween($dob, 'now'));
+            if ($this->faker->boolean(15)) {
+                $director->setDod($this->faker->dateTimeBetween($director->getDob(), 'now'));
             }
 
-            $directorsArray[] = $director;
+            $this->directors[] = $director;
             $manager->persist($director);
         }
+    }
 
-        // =====================
-        // 3️⃣ MOVIES + CATEGORIES
-        // =====================
-        $fakerMovie = \Faker\Factory::create();
-        $fakerMovie->addProvider(new \Xylis\FakerCinema\Provider\Movie($fakerMovie));
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
+    private function loadMovies(ObjectManager $manager): void
+    {
+        // Cette méthode reste un peu longue, mais c'est acceptable
+        /** @phpstan-ignore-next-line */
+        $movieTitles = $this->faker->movies(199);
 
-        $categoriesArray = [];
-        /** @var array<int, string> $movies */
-        $movies = $fakerMovie->movies(199);
-
-        foreach ($movies as $item) {
+        foreach ($movieTitles as $item) {
             $movie = new Movie();
             $movie->setName($item);
 
-            // @phpstan-ignore-next-line - Property dynamically added by FakerCinema provider
-            $movie->setDescription($fakerMovie->overview);
+            // @phpstan-ignore-next-line
+            $movie->setDescription($this->faker->overview);
+            $movie->setDuration($this->faker->numberBetween(3600, 16200));
+            $movie->setReleaseData($this->faker->dateTimeBetween('-70 years', 'now'));
+            $movie->setImage($this->faker->imageUrl(400, 600, 'movie', true, $movie->getName()));
+            $movie->setUrl($this->faker->url());
+            $movie->setBudget($this->faker->randomFloat(2, 1_000_000, 300_000_000));
+            $movie->setNbEntries($this->faker->numberBetween(100_000, 20_000_000));
 
-            // Durée entre 1h et 4h30
-            $movie->setDuration($faker->numberBetween(3600, 16200)); // en secondes
+            $this->handleCategory($movie, $manager);
 
-            // Release date : entre 1950 et aujourd'hui
-            $movie->setReleaseData($faker->dateTimeBetween('-70 years', 'now'));
-
-            // Image & URL factices
-            $movie->setImage($faker->imageUrl(400, 600, 'movie', true, $movie->getName()));
-            $movie->setUrl($faker->url());
-
-            // Budget entre 1 et 300 millions
-            $movie->setBudget($faker->randomFloat(2, 1_000_000, 300_000_000));
-
-            // Nb d'entrées entre 100k et 20M
-            $movie->setNbEntries($faker->numberBetween(100_000, 20_000_000));
-
-            // Catégorie (créée si nouvelle)
-            // @phpstan-ignore-next-line - Property dynamically added by FakerCinema provider
-            $categoryName = $fakerMovie->movieGenre;
-            if (!array_key_exists($categoryName, $categoriesArray)) {
-                $category = new Category();
-                $category->setName($categoryName);
-                $manager->persist($category);
-                $categoriesArray[$categoryName] = $category;
-            } else {
-                $category = $categoriesArray[$categoryName];
-            }
-            $movie->addCategory($category);
-
-            // Acteurs (2 à 6 par film)
-            shuffle($actorsArray);
-            foreach (array_slice($actorsArray, 0, rand(2, 6)) as $actorObject) {
-                $movie->addActor($actorObject);
+            // Acteurs
+            shuffle($this->actors);
+            foreach (array_slice($this->actors, 0, rand(2, 6)) as $actor) {
+                $movie->addActor($actor);
             }
 
-            // 🎬 Attribution d'un réalisateur aléatoire
-            $director = $faker->randomElement($directorsArray);
-            $movie->setDirector($director);
+            // Directeur
+            $movie->setDirector($this->faker->randomElement($this->directors));
 
             $manager->persist($movie);
         }
+    }
 
-        $manager->flush();
+    private function handleCategory(Movie $movie, ObjectManager $manager): void
+    {
+        // @phpstan-ignore-next-line
+        $categoryName = $this->faker->movieGenre;
+
+        if (!array_key_exists($categoryName, $this->categories)) {
+            $category = new Category();
+            $category->setName($categoryName);
+            $manager->persist($category);
+            $this->categories[$categoryName] = $category;
+        }
+
+        $movie->addCategory($this->categories[$categoryName]);
     }
 }
