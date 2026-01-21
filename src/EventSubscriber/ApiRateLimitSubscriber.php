@@ -3,17 +3,24 @@
 namespace App\EventSubscriber;
 
 use App\Entity\User;
+use DateInterval;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\RateLimiter\LimiterInterface;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\RateLimiter\Storage\CacheStorage;
 use Symfony\Component\RateLimiter\Policy\SlidingWindowLimiter;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
+/** @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 final class ApiRateLimitSubscriber implements EventSubscriberInterface
 {
     public function __construct(
@@ -38,36 +45,21 @@ final class ApiRateLimitSubscriber implements EventSubscriberInterface
         if (!str_starts_with($request->getPathInfo(), '/api/')) {
             return;
         }
-
         if (str_starts_with($request->getPathInfo(), '/api/docs') ||
-            str_starts_with($request->getPathInfo(), '/api/graphql/graphiql')) {
+            str_starts_with($request->getPathInfo(), '/api/graphql/graphiql')
+        ) {
             return;
         }
 
         $token = $this->tokenStorage->getToken();
         $user = $token?->getUser();
 
-        if ($user instanceof User) {
-            // ✅ Utilisateur authentifié : utilise SES propres limites depuis la BDD
-            $identifier = 'user_' . $user->getUserIdentifier();
+        // 1. On récupère le bon limiter (User ou Anonyme) via la méthode privée
+        // Cela supprime le "if/else" complexe de cette méthode principale
+        $limiter = $this->getLimiter($user, $request);
 
-            $storage = new CacheStorage($this->cache);
-
-            // Crée un limiter personnalisé avec les valeurs de l'utilisateur
-            $limiter = new SlidingWindowLimiter(
-                $identifier,
-                $user->getApiRateLimit(), // 🔥 Limite depuis l'entité User
-                \DateInterval::createFromDateString($user->getApiRateLimitInterval()), // 🔥 Interval depuis l'entité User
-                $storage
-            );
-
-            $limit = $limiter->consume();
-        } else {
-            // Utilisateur anonyme : utilise le limiter par défaut
-            $identifier = $request->getClientIp() ?? 'unknown';
-            $limiter = $this->anonymousApiLimiter->create($identifier);
-            $limit = $limiter->consume();
-        }
+        // 2. On consomme
+        $limit = $limiter->consume();
 
         $request->attributes->set('_rate_limit', [
             'limit' => $limit->getLimit(),
@@ -75,7 +67,7 @@ final class ApiRateLimitSubscriber implements EventSubscriberInterface
             'reset' => $limit->getRetryAfter()->getTimestamp(),
         ]);
 
-        if (!$limit->isAccepted()) {
+        if (false === $limit->isAccepted()) {
             $retryAfter = $limit->getRetryAfter();
             $response = new JsonResponse(
                 [
@@ -108,5 +100,27 @@ final class ApiRateLimitSubscriber implements EventSubscriberInterface
         $response->headers->set('X-RateLimit-Limit', (string) $rateLimitInfo['limit']);
         $response->headers->set('X-RateLimit-Remaining', (string) $rateLimitInfo['remaining']);
         $response->headers->set('X-RateLimit-Reset', (string) $rateLimitInfo['reset']);
+    }
+
+    /**
+     * Cette méthode permet de supprimer le ELSE en utilisant des return.
+     */
+    private function getLimiter(mixed $user, Request $request): LimiterInterface
+    {
+        if ($user instanceof User) {
+            $identifier = 'user_' . $user->getUserIdentifier();
+            $storage = new CacheStorage($this->cache);
+
+            return new SlidingWindowLimiter(
+                $identifier,
+                $user->getApiRateLimit(),
+                DateInterval::createFromDateString($user->getApiRateLimitInterval()),
+                $storage
+            );
+        }
+
+        $identifier = $request->getClientIp() ?? 'unknown';
+
+        return $this->anonymousApiLimiter->create($identifier);
     }
 }

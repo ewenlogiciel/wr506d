@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use DateTimeImmutable;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 #[ApiResource(
@@ -70,7 +71,7 @@ class Comment
     public function initializeCreatedAt(): void
     {
         if ($this->createdAt === null) {
-            $this->createdAt = new \DateTimeImmutable();
+            $this->createdAt = new DateTimeImmutable();
         }
     }
 

@@ -9,6 +9,11 @@ use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use OTPHP\TOTP;
+use RuntimeException;
+
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
 
 class TwoFactorService
 {
@@ -35,7 +40,7 @@ class TwoFactorService
     {
         $secret = $user->getTwoFactorSecret();
         if ($secret === null) {
-            throw new \RuntimeException('User does not have a 2FA secret');
+            throw new RuntimeException('User does not have a 2FA secret');
         }
 
         $totp = TOTP::createFromSecret($secret);

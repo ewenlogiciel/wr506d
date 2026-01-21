@@ -47,7 +47,8 @@ class TwoFactorController extends AbstractController
             'secret' => $secret,
             'qr_code' => $qrCodeDataUri,
             'provisioning_uri' => $provisioningUri,
-            'message' => 'Scannez le QR code avec votre application d\'authentification (Google Authenticator, Authy, etc.) puis validez avec un code pour activer le 2FA.',
+            'message' => 'Scannez le QR code avec votre application d\'authentification
+            (Google Authenticator, Authy, etc.) puis validez avec un code pour activer le 2FA.',
         ]);
     }
 

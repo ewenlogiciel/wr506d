@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +13,6 @@ class LoginController extends AbstractController
     #[Route('/auth', name: 'api_login', methods: ['POST'])]
     public function login(Request $request): JsonResponse
     {
-
         $user = $this->getUser();
 
         if (!$user) {
@@ -21,6 +21,7 @@ class LoginController extends AbstractController
             ], 401);
         }
 
+        /** @var User $user */
         return $this->json([
             'user' => [
                 'id' => $user->getId(),
