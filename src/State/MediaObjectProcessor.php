@@ -10,8 +10,14 @@ use App\Entity\MediaObject;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Vich\UploaderBundle\Storage\StorageInterface;
 
+/**
+ * @implements ProcessorInterface<MediaObject, MediaObject>
+ */
 final readonly class MediaObjectProcessor implements ProcessorInterface
 {
+    /**
+     * @param ProcessorInterface<MediaObject, MediaObject> $persistProcessor
+     */
     public function __construct(
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
         private ProcessorInterface $persistProcessor,

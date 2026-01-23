@@ -58,6 +58,7 @@ class Actor
     #[ORM\Column]
     #[Assert\Type('integer')]
     #[Groups(['actor:list', 'actor:read'])]
+    /** @phpstan-ignore property.unusedType */
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]

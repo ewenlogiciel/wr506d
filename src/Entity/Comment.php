@@ -20,6 +20,7 @@ class Comment
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups(['comment:read'])]
+    /** @phpstan-ignore property.unusedType */
     private ?int $id = null;
 
     #[ORM\Column(type: 'text')]
