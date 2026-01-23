@@ -14,13 +14,16 @@ use Xylis\FakerCinema\Provider\Person;
 use Xylis\FakerCinema\Provider\Movie as MovieProvider;
 
 /**
- * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings("PHPMD.StaticAccess")
  */
 class AppFixtures extends Fixture
 {
     private Generator $faker;
+    /** @var array<int, Actor> */
     private array $actors = [];
+    /** @var array<int, Director> */
     private array $directors = [];
+    /** @var array<string, Category> */
     private array $categories = [];
 
     public function __construct()
@@ -84,9 +87,6 @@ class AppFixtures extends Fixture
         }
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     */
     private function loadMovies(ObjectManager $manager): void
     {
         // Cette méthode reste un peu longue, mais c'est acceptable

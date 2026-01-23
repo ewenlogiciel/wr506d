@@ -12,9 +12,8 @@ use OTPHP\TOTP;
 use RuntimeException;
 
 /**
- * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings("PHPMD.StaticAccess")
  */
-
 class TwoFactorService
 {
     private string $issuer;

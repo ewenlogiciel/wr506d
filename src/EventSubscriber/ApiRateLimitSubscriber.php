@@ -15,18 +15,18 @@ use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\RateLimiter\Storage\CacheStorage;
 use Symfony\Component\RateLimiter\Policy\SlidingWindowLimiter;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Contracts\Cache\CacheInterface;
+use Psr\Cache\CacheItemPoolInterface;
 
-/** @SuppressWarnings(PHPMD.StaticAccess)
- * @SuppressWarnings(PHPMD.StaticAccess)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+/**
+ * @SuppressWarnings("PHPMD.StaticAccess")
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 final class ApiRateLimitSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly RateLimiterFactory $anonymousApiLimiter,
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly CacheInterface $cache
+        private readonly CacheItemPoolInterface $cache
     ) {
     }
 

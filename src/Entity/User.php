@@ -34,12 +34,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups(['comment:read'])]
+    /** @phpstan-ignore property.unusedType */
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
     #[Groups(['comment:read'])]
     private ?string $email = null;
 
+    /** @var array<string> */
     #[ORM\Column]
     private array $roles = [];
 
@@ -54,6 +56,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $twoFactorEnabled = false;
 
+    /** @var array<string>|null */
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $twoFactorBackupCodes = null;
 
@@ -63,6 +66,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 20, options: ['default' => '1 hour'])]
     private string $apiRateLimitInterval = '1 hour';
 
+    /** @var Collection<int, Comment> */
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $comments;
 
@@ -99,6 +103,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param array<string> $roles
+     */
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
@@ -149,11 +156,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return array<string>|null
+     */
     public function getTwoFactorBackupCodes(): ?array
     {
         return $this->twoFactorBackupCodes;
     }
 
+    /**
+     * @param array<string>|null $twoFactorBackupCodes
+     */
     public function setTwoFactorBackupCodes(?array $twoFactorBackupCodes): static
     {
         $this->twoFactorBackupCodes = $twoFactorBackupCodes;
@@ -196,6 +209,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $data;
     }
 
+    /**
+     * @return Collection<int, Comment>
+     */
     public function getComments(): Collection
     {
         return $this->comments;

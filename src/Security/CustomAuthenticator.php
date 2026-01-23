@@ -19,9 +19,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
 /**
- * Si le couplage reste limite (14/13) après nettoyage, on autorise l'exception ici
- * car un Authenticator a naturellement besoin de beaucoup de composants.
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 class CustomAuthenticator extends AbstractAuthenticator
 {
@@ -73,7 +71,6 @@ class CustomAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        /** @var User $user */
         $user = $token->getUser();
 
         if (!$user instanceof User) {

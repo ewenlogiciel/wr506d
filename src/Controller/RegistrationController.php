@@ -44,11 +44,7 @@ class RegistrationController extends AbstractController
         $user = new User();
         $user->setEmail($data['email']);
 
-        $hashedPassword = $passwordHasher->hashPassword(
-            $user,
-            $data['password']
-        );
-        $user->setPassword($hashedPassword);
+        $user->setPassword($data['password']);
 
         $user->setRoles([]);
 

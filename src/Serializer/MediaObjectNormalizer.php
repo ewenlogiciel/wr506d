@@ -18,6 +18,10 @@ class MediaObjectNormalizer implements NormalizerInterface
     ) {
     }
 
+    /**
+     * @param array<string, mixed> $context
+     * @return array<string, mixed>|string|int|float|bool|\ArrayObject<string, mixed>|null
+     */
     public function normalize(
         $object,
         ?string $format = null,
@@ -30,9 +34,11 @@ class MediaObjectNormalizer implements NormalizerInterface
         return $this->normalizer->normalize($object, $format, $context);
     }
 
+    /**
+     * @param array<string, mixed> $context
+     */
     public function supportsNormalization($data, ?string $format = null, array $context = []): bool
     {
-
         if (isset($context[self::ALREADY_CALLED])) {
             return false;
         }

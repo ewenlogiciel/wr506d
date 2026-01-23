@@ -24,7 +24,6 @@ class TwoFactorController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function setup(): JsonResponse
     {
-        /** @var User $user */
         $user = $this->getUser();
 
         if (!$user instanceof User) {
@@ -56,7 +55,6 @@ class TwoFactorController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function enable(Request $request): JsonResponse
     {
-        /** @var User $user */
         $user = $this->getUser();
 
         if (!$user instanceof User) {

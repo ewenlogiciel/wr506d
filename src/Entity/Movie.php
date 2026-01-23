@@ -30,6 +30,7 @@ class Movie
     #[ORM\Column]
     #[Assert\Type('integer')]
     #[Groups(['movie:list'])]
+    /** @phpstan-ignore property.unusedType */
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -169,6 +170,9 @@ class Movie
         }
     }
 
+    /**
+     * @return Collection<int, Category>
+     */
     public function getCategories(): Collection
     {
         return $this->categories;
@@ -191,6 +195,9 @@ class Movie
         return $this;
     }
 
+    /**
+     * @return Collection<int, Actor>
+     */
     public function getActors(): Collection
     {
         return $this->actors;
@@ -257,6 +264,9 @@ class Movie
         return $this;
     }
 
+    /**
+     * @return Collection<int, Comment>
+     */
     public function getComments(): Collection
     {
         return $this->comments;
