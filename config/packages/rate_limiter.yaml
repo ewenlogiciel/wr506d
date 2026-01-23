@@ -1,0 +1,11 @@
+framework:
+    rate_limiter:
+        anonymous_api:
+            policy: 'sliding_window'
+            limit: 100
+            interval: '1 hour'
+
+        authenticated_api:
+            policy: 'sliding_window'
+            limit: 5000
+            interval: '1 hour'
